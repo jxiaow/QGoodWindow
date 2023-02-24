@@ -1,6 +1,6 @@
 #The MIT License (MIT)
 
-#Copyright © 2021-2022 Antonio Dias
+#Copyright © 2021-2023 Antonio Dias
 
 #Permission is hereby granted, free of charge, to any person obtaining a copy
 #of this software and associated documentation files (the "Software"), to deal
@@ -24,6 +24,8 @@ TEMPLATE = subdirs
 
 SUBDIRS += \
     ExampleMinimal \
+    ExampleMinimalWindow \
+    GoodPlayground \
     GoodShowCase \
     GoodShowCaseGL \
     GoodShowCaseQML

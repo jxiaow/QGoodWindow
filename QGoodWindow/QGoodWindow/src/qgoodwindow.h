@@ -1,7 +1,7 @@
 /*
 The MIT License (MIT)
 
-Copyright © 2018-2022 Antonio Dias
+Copyright © 2018-2023 Antonio Dias (https://github.com/antonypro)
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -28,6 +28,11 @@ SOFTWARE.
 #include <QtCore>
 #include <QtGui>
 #include <QtWidgets>
+#include "qgoodstateholder.h"
+#include "lightstyle.h"
+#include "darkstyle.h"
+
+#include "qgoodwindow_global.h"
 
 #ifdef QGOODWINDOW
 
@@ -44,14 +49,8 @@ class Shadow;
 
 #endif
 
-/** **QGoodWindow** class contains the public API's to control the behavior of the customized window.
- *
- * On Windows, **QGoodWindow** class inherits from `QMainWindow` which is used as a native widget that
- * creates, fill and control the native window of **QGoodWindow**.
- *
- * On Linux and macOS the **QGoodWindow** behaves like a frameless `QMainWindow`.
- */
-class QGoodWindow : public QMainWindow
+/** **QGoodWindow** class contains the public API's to control the behavior of the customized window. */
+class QGOODWINDOW_SHARED_EXPORT QGoodWindow : public QMainWindow
 {
     Q_OBJECT
 public:
@@ -61,7 +60,7 @@ public:
     * creates the shadow, initialize default values and calls the `QMainWindow`
     * parent constructor.
     *
-    * On Linux creates the frameless `QMainWindow`, use the shadow only to create resize borders,
+    * On Linux creates the frame less `QMainWindow`, use the shadow only to create resize borders,
     * and the real shadow is draw by current Linux window manager.
     *
     * On macOS creates a `QMainWindow` with full access to the title bar,
@@ -74,7 +73,7 @@ public:
     /** Destructor of *QGoodWindow*. */
     ~QGoodWindow();
 
-    /** Enum that contains caption buttons states when it's states are handled by *QGoodWindow*.*/
+    /** Enum that contains caption buttons states when it's states are handled by *QGoodWindow*. */
     enum class CaptionButtonState
     {
         /** Minimize button hover enter. */
@@ -124,13 +123,43 @@ public:
     };
 
     //Functions
+    //\cond HIDDEN_SYMBOLS
+    void themeChanged();
+    //\endcond
+
     /** Returns the window id of the *QGoodWindow*. */
     WId winId() const;
 
-    //Variables
-    /** Reserved. */
-    QPointer<QTimer> m_theme_change_timer;
+    /** *QGoodWindow* handles flags internally, use this function only when *QGoodWindow* is not enabled. */
+    void setWindowFlags(Qt::WindowFlags type);
 
+    /** Returns the window flags of the *QGoodWindow*. */
+    Qt::WindowFlags windowFlags() const;
+
+    /*** QGOODWINDOW FUNCTIONS BEGIN ***/
+
+    /** Call this function to setup *QApplication* for *QGoodWindow* usage. */
+    static void setup();
+
+    /** Returns if the current system theme is dark or not. */
+    static bool isSystemThemeDark();
+
+    /** Returns true if system draw borders and false if your app should do it. */
+    static bool shouldBordersBeDrawnBySystem();
+
+    /** Show modal frame less *QDialog*, inside window \e child_gw, with parent \e parent_gw. */
+    static int execDialog(QDialog *dialog, QGoodWindow *child_gw, QGoodWindow *parent_gw);
+
+    /** Set the app theme to the dark theme. */
+    static void setAppDarkTheme();
+
+    /** Set the app theme to the light theme. */
+    static void setAppLightTheme();
+
+    /** Get the global state holder. */
+    static QGoodStateHolder *qGoodStateHolderInstance();
+
+    /*** QGOODWINDOW FUNCTIONS END ***/
 signals:
     /** On handled caption buttons, this SIGNAL report the state of these buttons. */
     void captionButtonStateChanged(const QGoodWindow::CaptionButtonState &state);
@@ -141,11 +170,17 @@ signals:
 public slots:
     /*** QGOODWINDOW FUNCTIONS BEGIN ***/
 
-    /** Returns if the current system theme is dark or not. */
-    static bool isSystemThemeDark();
+    /** Call setMargins() but only changes title bar height. */
+    void setTitleBarHeight(int height);
 
-    /** Returns if there is a one pixel margin around window for resizing or not, i.e. if system draw margins. */
-    static bool shouldBordersBeDrawnBySystem();
+    /** Call setMargins() but only changes icon width. */
+    void setIconWidth(int width);
+
+    /** Call setMargins() but only changes left margin. */
+    void setLeftMargin(int width);
+
+    /** Call setMargins() but only changes right margin. */
+    void setRightMargin(int width);
 
     /** On Windows, Linux and macOS, returns the actual title bar height, on other OSes returns 0. */
     int titleBarHeight() const;
@@ -159,7 +194,8 @@ public slots:
     /** On Windows, Linux and macOS, returns the right margin of the customized title bar, on other OSes returns 0. */
     int rightMargin() const;
 
-    /** Set the tile bar height, icon width, left and right margins of the customized title bar. */
+    /** Set the tile bar height, icon width, left and right margins of the customized title bar.
+        Note: Any call to setMargins() clear the left and right masks and the title bar caption buttons masks. */
     void setMargins(int title_bar_height, int icon_width, int left, int right);
 
     /** Set the mask for the left margin of the customized title bar. */
@@ -168,7 +204,14 @@ public slots:
     /** Set the mask for the right margin of the customized title bar. */
     void setRightMask(const QRegion &mask);
 
-    /** Set if the caption buttons should be handled by *QGoodWindow* and on which \e corner, valid only top left and top right corners. */
+    /** Set the mask for the center of the customized title bar. */
+    void setCenterMask(const QRegion &mask);
+
+    /** Set the mask for the customized title bar, used in combination with others masks. */
+    void setTitleBarMask(const QRegion &mask);
+
+    /** Set if the caption buttons should be handled by *QGoodWindow* and on which \e corner,
+     *valid only top left and top right corners. */
     void setCaptionButtonsHandled(bool handled, const Qt::Corner &corner = Qt::TopRightCorner);
 
     /** Set the location and shape of handled minimize button, relative to handled corner. */
@@ -179,6 +222,27 @@ public slots:
 
     /** Set the location and shape of handled close button, relative to handled corner. */
     void setCloseMask(const QRegion &mask);
+
+    /** Get the mask for the left margin of the customized title bar. */
+    QRegion leftMask() const;
+
+    /** Get the mask for the right margin of the customized title bar. */
+    QRegion rightMask() const;
+
+    /** Get the mask for the center of the customized title bar. */
+    QRegion centerMask() const;
+
+    /** Get the mask for the customized title bar. */
+    QRegion titleBarMask() const;
+
+    /** Get the location and shape of handled minimize button, relative to handled corner. */
+    QRegion minimizeMask() const;
+
+    /** Get the location and shape of handled maximize button, relative to handled corner. */
+    QRegion maximizeMask() const;
+
+    /** Get the location and shape of handled close button, relative to handled corner. */
+    QRegion closeMask() const;
 
     /** Get the size that should be the size of the mask on the left margin of the customized title bar. */
     QSize leftMaskSize() const;
@@ -200,6 +264,45 @@ public slots:
     /** Set fixed size for *QGoodWindow* to \e size. */
     void setFixedSize(const QSize &size);
 
+    /** Set minimum size for *QGoodWindow* to \e size. */
+    void setMinimumSize(const QSize &size);
+
+    /** Set maximum size for *QGoodWindow* to \e size. */
+    void setMaximumSize(const QSize &size);
+
+    /** Set minimum width for *QGoodWindow* to \e w. */
+    void setMinimumWidth(int w);
+
+    /** Set minimum height for *QGoodWindow* to \e h. */
+    void setMinimumHeight(int h);
+
+    /** Set maximum width for *QGoodWindow* to \e w. */
+    void setMaximumWidth(int w);
+
+    /** Set maximum height for *QGoodWindow* to \e h. */
+    void setMaximumHeight(int h);
+
+    /** Returns the *QGoodWindow* minimum size. */
+    QSize minimumSize() const;
+
+    /** Returns the *QGoodWindow* maximum size. */
+    QSize maximumSize() const;
+
+    /** Returns minimum width for *QGoodWindow* */
+    int minimumWidth() const;
+
+    /** Returns minimum height for *QGoodWindow* */
+    int minimumHeight() const;
+
+    /** Returns maximum width for *QGoodWindow* */
+    int maximumWidth() const;
+
+    /** Returns maximum height for *QGoodWindow* */
+    int maximumHeight() const;
+
+    /** Returns the geometry for *QGoodWindow* when it's state is no state. */
+    QRect normalGeometry() const;
+
     /** Returns the geometry for *QGoodWindow* including extended frame and excluding shadow. */
     QRect frameGeometry() const;
 
@@ -214,6 +317,12 @@ public slots:
 
     /** Size of the window on screen. */
     QSize size() const;
+
+    /** Size hint of the window. */
+    QSize sizeHint() const override;
+
+    /** Minimum size hint of the window. */
+    QSize minimumSizeHint() const override;
 
     /** X position of the window on screen. */
     int x() const;
@@ -314,14 +423,24 @@ public slots:
     /** Sets the icon of the *QGoodWindow* to \e icon. */
     void setWindowIcon(const QIcon &icon);
 
+    /** Returns a copy of the window state to restore it later. */
+    QByteArray saveGeometry() const;
+
+    /** Restore window to previous state \e geometry. */
+    bool restoreGeometry(const QByteArray &geometry);
+
 protected:
+    //\cond HIDDEN_SYMBOLS
     //Functions
-    bool event(QEvent *event);
-    bool eventFilter(QObject *watched, QEvent *event);
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-    bool nativeEvent(const QByteArray &eventType, void *message, long *result);
-#else
-    bool nativeEvent(const QByteArray &eventType, void *message, qintptr *result);
+    bool event(QEvent *event) override;
+
+    bool eventFilter(QObject *watched, QEvent *event) override;
+
+#ifdef QT_VERSION_QT5
+    bool nativeEvent(const QByteArray &eventType, void *message, long *result) override;
+#endif
+#ifdef QT_VERSION_QT6
+    bool nativeEvent(const QByteArray &eventType, void *message, qintptr *result) override;
 #endif
 
 private:
@@ -330,36 +449,52 @@ private:
     //Functions
     void initGW();
     void destroyGW();
+    void setWindowStateWin();
     static LRESULT WndProc(HWND hwnd, UINT message, WPARAM wParam, LPARAM lParam);
     void handleActivation();
     void handleDeactivation();
+    int mapScaledToGlobalX(int x);
+    int mapScaledToGlobalY(int y);
     void setWidgetFocus();
     void enableCaption();
     void disableCaption();
     void frameChanged();
     void sizeMoveWindow();
-    LRESULT ncHitTest(int x, int y);
     void showContextMenu(int x, int y);
     void showContextMenu();
     QWidget *bestParentForModalWindow();
     void moveCenterWindow(QWidget *widget);
-    bool winButtonHover(long button);
+    bool winButtonHover(qintptr button);
+    void iconClicked();
 
     //Variables
     HWND m_hwnd;
+    bool m_is_win_11_or_greater;
     bool m_win_use_native_borders;
     QPointer<QMainWindow> m_main_window;
     QPointer<Shadow> m_shadow;
     QPointer<QWidget> m_helper_widget;
+#ifdef QT_VERSION_QT6
+    QPointer<QWindow> m_helper_window;
+#endif
     QGoodWindowUtils::NativeEventFilter *m_native_event;
     QWindow *m_window_handle;
 
     QPointer<QWidget> m_focus_widget;
 
+    QPointer<QTimer> m_resize_timer;
+
     bool m_closed;
+    bool m_visible;
+    bool m_internal_event;
+
+    Qt::WindowStates m_window_state;
+
+    QPointer<QTimer> m_timer_menu;
+    bool m_is_menu_visible;
 
     bool m_is_full_screen;
-    QRect m_rect_origin;
+    QRect m_rect_normal;
 
     bool m_active_state;
 
@@ -377,13 +512,13 @@ private:
     void sizeMoveBorders();
 
     //Variables
-    QList<QPointer<Shadow>> m_shadow_list;
+    QPointer<Shadow> m_shadow;
 
     int m_margin;
     QPoint m_cursor_pos;
     bool m_resize_move;
     bool m_resize_move_started;
-    qreal m_pixel_ratio;
+    Qt::WindowFlags m_window_flags;
 
     friend class Shadow;
 #endif
@@ -392,40 +527,44 @@ private:
     void notificationReceiver(const QByteArray &notification);
 
     //Variables
-    QPoint m_pos;
+    QPoint m_cursor_move_pos;
     bool m_mouse_button_pressed;
     bool m_on_animate_event;
 
     friend class Notification;
 #endif
 #if defined Q_OS_LINUX || defined Q_OS_MAC
-    //Functions
-    int ncHitTest(int x, int y);
-
-    //Variables
     int m_last_move_button;
 #endif
-#if defined Q_OS_WIN || defined Q_OS_LINUX
-    bool m_fixed_size;
-#endif
-#ifdef Q_OS_LINUX
-    bool m_last_fixed_size_value;
+#ifdef Q_OS_WIN
+    int m_minimum_width;
+    int m_minimum_height;
+    int m_maximum_width;
+    int m_maximum_height;
 #endif
     //Functions
-    void buttonEnter(long button);
-    void buttonLeave(long button);
-    bool buttonPress(long button);
-    bool buttonRelease(long button, bool valid_click);
+    qintptr ncHitTest(int pos_x, int pos_y);
+
+    void buttonEnter(qintptr button);
+    void buttonLeave(qintptr button);
+    bool buttonPress(qintptr button);
+    bool buttonRelease(qintptr button, bool valid_click);
 
     //Variables
+    QPointer<QWidget> m_parent;
+
     QPointer<QTimer> m_hover_timer;
 
     QRegion m_left_mask;
     QRegion m_right_mask;
+    QRegion m_center_mask;
+    QRegion m_title_bar_mask;
 
     QRegion m_min_mask;
     QRegion m_max_mask;
     QRegion m_cls_mask;
+
+    qreal m_pixel_ratio;
 
     bool m_dark;
 
@@ -438,9 +577,10 @@ private:
     int m_right_margin;
 
     bool m_is_caption_button_pressed;
-    long m_last_caption_button_hovered;
-    long m_caption_button_pressed;
+    qintptr m_last_caption_button_hovered;
+    qintptr m_caption_button_pressed;
 #endif
+    //\endcond
 };
 
 #endif // QGOODWINDOW_H

@@ -1,7 +1,7 @@
 /*
 The MIT License (MIT)
 
-Copyright © 2018-2022 Antonio Dias
+Copyright © 2018-2023 Antonio Dias (https://github.com/antonypro)
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -27,10 +27,12 @@ SOFTWARE.
 
 int main(int argc, char *argv[])
 {
-    QApplication a(argc, argv);
+    QGoodWindow::setup();
+
+    QApplication app(argc, argv);
 
     MainWindow mw;
     mw.show();
 
-    return a.exec();
+    return app.exec();
 }

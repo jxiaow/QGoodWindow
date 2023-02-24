@@ -1,7 +1,7 @@
 /*
 The MIT License (MIT)
 
-Copyright © 2018-2022 Antonio Dias
+Copyright © 2018-2023 Antonio Dias (https://github.com/antonypro)
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -29,7 +29,7 @@ SOFTWARE.
 #include <QtGui>
 #include <QtWidgets>
 
-#ifdef Q_OS_LINUX
+#if defined Q_OS_WIN || defined Q_OS_LINUX
 class QGoodWindow;
 #endif
 
@@ -38,11 +38,8 @@ class Shadow : public QWidget
 {
     Q_OBJECT
 public:
-#ifdef Q_OS_WIN
-    explicit Shadow(qreal pixel_ratio, HWND hwnd);
-#endif
-#ifdef Q_OS_LINUX
-    explicit Shadow(QWidget *parent);
+#if defined Q_OS_WIN || defined Q_OS_LINUX
+    explicit Shadow(qintptr hwnd, QWidget *parent);
 #endif
 
 public slots:
@@ -54,22 +51,23 @@ public slots:
 
 private:
     //Functions
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+#ifdef QT_VERSION_QT5
     bool nativeEvent(const QByteArray &eventType, void *message, long *result);
-#else
+#endif
+#ifdef QT_VERSION_QT6
     bool nativeEvent(const QByteArray &eventType, void *message, qintptr *result);
 #endif
+    bool event(QEvent *event);
     void paintEvent(QPaintEvent *event);
 
     //Variables
+#if defined Q_OS_WIN || defined Q_OS_LINUX
+    QPointer<QGoodWindow> m_parent;
+    QTimer *m_timer;
+#endif
 #ifdef Q_OS_WIN
     HWND m_hwnd;
-    QTimer *m_timer;
     bool m_active;
-    qreal m_pixel_ratio;
-#endif
-#ifdef Q_OS_LINUX
-    QPointer<QGoodWindow> m_parent;
 #endif
 };
 //\endcond

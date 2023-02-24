@@ -1,6 +1,6 @@
 #The MIT License (MIT)
 
-#Copyright © 2021-2022 Antonio Dias
+#Copyright © 2021-2023 Antonio Dias (https://github.com/antonypro)
 
 #Permission is hereby granted, free of charge, to any person obtaining a copy
 #of this software and associated documentation files (the "Software"), to deal
@@ -22,9 +22,11 @@
 
 QT += core gui widgets
 
-include($$PWD/../../QGoodWindow/QGoodWindow.pri)
-
 CONFIG += c++11
+
+#CONFIG += no_qgoodwindow #This flag disable QGoodWindow
+
+include($$PWD/../../QGoodWindow/QGoodWindow.pri)
 
 SOURCES += \
     main.cpp \

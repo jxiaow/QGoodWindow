@@ -1,7 +1,7 @@
 /*
 The MIT License (MIT)
 
-Copyright © 2018-2022 Antonio Dias
+Copyright © 2018-2023 Antonio Dias (https://github.com/antonypro)
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -29,35 +29,15 @@ SOFTWARE.
 #include <QtGui>
 #include <QtWidgets>
 #include <QGoodWindow>
+#include <QGoodCentralWidget>
 
 #ifdef Q_OS_WIN
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
+#ifdef QT_VERSION_QT5
 #include <QtWinExtras>
 #endif
 #endif
 
-#ifdef QGOODWINDOW
-#include "titlebar.h"
-#endif
-
 #include "glwidget.h"
-
-inline qreal pixelRatio()
-{
-#ifdef QGOODWINDOW
-    QScreen *screen = QApplication::primaryScreen();
-
-#ifdef Q_OS_MAC
-    qreal pixel_ratio = screen->devicePixelRatio();
-#else
-    qreal pixel_ratio = screen->logicalDotsPerInch() / qreal(96);
-#endif
-
-#else
-    qreal pixel_ratio = qreal(1);
-#endif
-    return pixel_ratio;
-}
 
 class MainWindow : public QGoodWindow
 {
@@ -68,26 +48,10 @@ public:
 
 private:
     //Functions
-#ifdef QGOODWINDOW
-    void styleWindow();
-#endif
     void closeEvent(QCloseEvent *event);
-#if QT_VERSION < QT_VERSION_CHECK(6, 0, 0)
-    bool nativeEvent(const QByteArray &eventType, void *message, long *result);
-#else
-    bool nativeEvent(const QByteArray &eventType, void *message, qintptr *result);
-#endif
-    bool event(QEvent *event);
 
     //Variables
-    bool m_draw_borders;
-    bool m_dark;
-    QFrame *frame;
-    QString m_color_str;
-    QString m_frame_style;
-#ifdef QGOODWINDOW
-    TitleBar *title_bar;
-#endif
+    QGoodCentralWidget *m_good_central_widget;
 };
 
 #endif // MAINWINDOW_H

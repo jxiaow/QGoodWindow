@@ -1,7 +1,7 @@
 /*
 The MIT License (MIT)
 
-Copyright © 2018-2022 Antonio Dias
+Copyright © 2018-2023 Antonio Dias (https://github.com/antonypro)
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -27,14 +27,16 @@ SOFTWARE.
 
 int main(int argc, char *argv[])
 {
+    QGoodWindow::setup();
+
 #ifdef Q_OS_LINUX
     QApplication::setAttribute(Qt::AA_DontCreateNativeWidgetSiblings);
 #endif
 
-    QApplication a(argc, argv);
+    QApplication app(argc, argv);
 
     MainWindow mw;
     mw.show();
 
-    return a.exec();
+    return app.exec();
 }

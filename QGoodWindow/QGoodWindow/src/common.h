@@ -1,7 +1,7 @@
 /*
 The MIT License (MIT)
 
-Copyright © 2018-2022 Antonio Dias
+Copyright © 2018-2023 Antonio Dias (https://github.com/antonypro)
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -33,6 +33,17 @@ SOFTWARE.
 
 #define _WIN32_WINNT _WIN32_WINNT_VISTA
 
+#include <windows.h>
+
+inline int BORDERWIDTH()
+{
+    return (GetSystemMetrics(SM_CXFRAME) + GetSystemMetrics(SM_CXPADDEDBORDER));
+}
+
+inline int BORDERHEIGHT()
+{
+    return (GetSystemMetrics(SM_CXFRAME) + GetSystemMetrics(SM_CXPADDEDBORDER));
+}
 #endif
 
 #include <QtCore>
@@ -43,6 +54,8 @@ SOFTWARE.
 
 #define BORDERWIDTH 10 //PIXELS
 
+#define BORDERWIDTHDPI BORDERWIDTH
+
 #define MOVERESIZE_MOVE 8 //X11 Fixed Value
 
 #endif
@@ -50,29 +63,21 @@ SOFTWARE.
 #if defined Q_OS_LINUX || defined Q_OS_MAC
 //The positive values are mandatory on Linux and arbitrary on macOS,
 //using the same for convenience.
-//The negative value are arbitrary on both platforms.
+//The negative values are arbitrary on both platforms.
 
-#define NO_WHERE -1
+#define HTNOWHERE -1
 #define HTMINBUTTON -2
 #define HTMAXBUTTON -3
 #define HTCLOSE -4
-#define TOP_LEFT 0
-#define TOP 1
-#define TOP_RIGHT 2
-#define LEFT 7
-#define RIGHT 3
-#define BOTTOM_LEFT 6
-#define BOTTOM 5
-#define BOTTOM_RIGHT 4
-#define TITLE_BAR 8
-
-#endif
-
-#ifdef Q_OS_WIN
-
-#include <windows.h>
-
-#define BORDERWIDTH (GetSystemMetrics(SM_CXFRAME) + GetSystemMetrics(SM_CXPADDEDBORDER))
+#define HTTOPLEFT 0
+#define HTTOP 1
+#define HTTOPRIGHT 2
+#define HTLEFT 7
+#define HTRIGHT 3
+#define HTBOTTOMLEFT 6
+#define HTBOTTOM 5
+#define HTBOTTOMRIGHT 4
+#define HTCAPTION 8
 
 #endif
 

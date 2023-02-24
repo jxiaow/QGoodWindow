@@ -1,6 +1,6 @@
 #The MIT License (MIT)
 
-#Copyright © 2021-2022 Antonio Dias
+#Copyright © 2021-2023 Antonio Dias (https://github.com/antonypro)
 
 #Permission is hereby granted, free of charge, to any person obtaining a copy
 #of this software and associated documentation files (the "Software"), to deal
@@ -26,9 +26,13 @@ win32:equals(QT_MAJOR_VERSION, 5){
 QT += winextras
 }
 
+CONFIG += c++11
+
+#CONFIG += no_qgoodwindow #This flag disable QGoodWindow
+
 include($$PWD/../../QGoodWindow/QGoodWindow.pri)
 
-CONFIG += c++11
+include($$PWD/../../QGoodCentralWidget/QGoodCentralWidget.pri)
 
 SOURCES += \
     main.cpp \
@@ -39,20 +43,3 @@ HEADERS += \
 
 RESOURCES += \
     qml.qrc
-
-qgoodwindow {
-SOURCES += \
-    captionbutton.cpp \
-    iconwidget.cpp \
-    titlebar.cpp \
-    titlewidget.cpp
-
-HEADERS += \
-    captionbutton.h \
-    iconwidget.h \
-    titlebar.h \
-    titlewidget.h
-
-RESOURCES += \
-    res.qrc
-}

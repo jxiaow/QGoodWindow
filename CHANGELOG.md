@@ -1,3 +1,54 @@
+## *Version 2.3:*
+
+- The library automatically adapts to primary screen DPI. [#25](https://github.com/antonypro/QGoodWindow/issues/25)
+- Improved compilation as shared or static library with QMake, the include headers contains the proper defines. [#26](https://github.com/antonypro/QGoodWindow/issues/26)
+- The caption buttons icons are now SVG instead of PNG.
+- Copied behavior of QWidget setWindowState and not apply state when the window is not visible.
+- Fixed bug that shows the shadow unexpectedly.
+- Fixed bug related to alignment that makes impossible compiling when no_qgoodwindow is set on Windows. [#24](https://github.com/antonypro/QGoodWindow/issues/24)
+- Fixed bug that makes the window blank on close on Windows.
+- Fixed bug with mouse position on caption buttons in modal QDialog on macOS.
+- Fixed bug that not centers correctly QGoodWindow children's.
+- Other bug fixes.
+
+## *Version 2.2.1:*
+
+- Fixed bug that not shows the window icon set by the application.
+
+## *Version 2.2:*
+
+- Added possibility to place title also on center or right side of the title bar on QGoodCentralWidget.
+- Added possibility to place widgets on center of the title bar on QGoodCentralWidget.
+- Added possibility to unify title bar and central widget on QGoodCentralWidget.
+- Added possibility to build QGoodWindow as shared or static library. [#9](https://github.com/antonypro/QGoodWindow/issues/9)
+- Copied behavior of QMainWindow that always center QDialog to parent on QDialog show. [#23](https://github.com/antonypro/QGoodWindow/issues/23)
+- Fixed bug that uses wrong geometry on saveGeometry() making window grows when geometry is restored. [#21](https://github.com/antonypro/QGoodWindow/issues/21)
+- Fixed bug that makes title bar widgets unable to receive focus.
+- Fixed bug that makes impossible compiling when no_qgoodwindow is set. [#22](https://github.com/antonypro/QGoodWindow/issues/22)
+- Fixed bug that show buttons on full screen restore on macOS.
+- Fixed bug that prevent from showing correct layout spacing on macOS.
+- Other bug fixes.
+
+## *Version 2.1:*
+
+- Added CMake build system support. [#18](https://github.com/antonypro/QGoodWindow/issues/18)
+- Added QGoodCentralWidget as a separate module to make easier manage QGoodWindow.
+- Added qGoodStateHolder macro to QGoodWindow module to handle dark and light modes application wide.
+- Added Light and Dark fusion themes to QGoodWindow module.
+- Added possibility to modal QDialog also have customized title bar and borders.
+- Fixed problems when window receives focus back from modal QDialog.
+- isActiveWindow() returns true also if active window is a children of the window.
+- Prevent from resize widgets while the window is not is visible.
+- Improved resize border on Linux, that respects the current window stack.
+- Implemented functions to save and restore window state as is in QMainWindow. [#15](https://github.com/antonypro/QGoodWindow/issues/15)
+- Fixed bug that prevents process to exit on last window close on Windows.
+- API windowFlags() returns correct flags for the QGoodWindow.
+- QMessageBox uses the up-to-date icons on Windows.
+- Fixed warning while building on Linux related to GTK.
+- Fixed bug that prevents interact with the window after moving on Qt 6.
+- Fixed bug with high DPI scaling in Qt 6. [#19](https://github.com/antonypro/QGoodWindow/issues/19)
+- Other bug fixes.
+
 ## *Version 2.0:*
 
 - Added support for Qt 6. [#3](https://github.com/antonypro/QGoodWindow/issues/3)
@@ -12,20 +63,20 @@
 
 ## *Version 1.1:*
 
-- Added mask possibility to `QGoodWindow` margins. [#1](https://github.com/antonypro/QGoodWindow/issues/1)
-- Fixed `QWidget` focus bugs when the window gets and lose focus.
-- Move `QGoodWindow` to another screen changes it's `QScreen` information, and full screen works correctly on multiple monitors on Windows. [#4](https://github.com/antonypro/QGoodWindow/issues/4)
-- Fixed bugs when `Qt::AA_NativeWindows` is set or `QWidget::winId()` is called on Windows preventing the window from being moved. [#5](https://github.com/antonypro/QGoodWindow/issues/5)
+- Added mask possibility to QGoodWindow margins. [#1](https://github.com/antonypro/QGoodWindow/issues/1)
+- Fixed QWidget focus bugs when the window gets and lose focus.
+- Move QGoodWindow to another screen changes it's QScreen information, and full screen works correctly on multiple monitors on Windows. [#4](https://github.com/antonypro/QGoodWindow/issues/4)
+- Fixed bugs when Qt::AA_NativeWindows is set or QWidget::winId() is called on Windows preventing the window from being moved. [#5](https://github.com/antonypro/QGoodWindow/issues/5)
 - Fixed bug that sometimes not shows the correct mouse cursor on Linux.
 - Fixed bug that on some Linux distributions shows undesired rounded corners on the window.
-- `QGoodWindow::frameGeometry()` now reports the correct window geometry on Windows even when maximized.
-- Added `qgoodwindow` `CONFIG` for `qmake`.
-- The API `QGoodWindow::setClearColor()` was removed and now clear color should be passed directly to class constructor.
+- QGoodWindow::frameGeometry() now reports the correct window geometry on Windows even when maximized.
+- Added qgoodwindow CONFIG for qmake.
+- The API QGoodWindow::setClearColor() was removed and now clear color should be passed directly to class constructor.
 - Other bug fixes.
 
 ## *Version 1.0:*
 
 - Added support for Linux and macOS.
-- Fixed bug that crashes application on `QCoreApplication::exit()`. [#2](https://github.com/antonypro/QGoodWindow/issues/2)
+- Fixed bug that crashes application on QCoreApplication::exit(). [#2](https://github.com/antonypro/QGoodWindow/issues/2)
 - Added support for multiple windows on the same process.
-- Other minor bug fixes.
+- Other bug fixes.
